@@ -1,0 +1,4 @@
+.function__messages {
+    height: calc(100% / 2);
+    border: 2px solid #fff;
+}

@@ -1,0 +1,8 @@
+@import url('./__buttons/function__buttons.css');
+@import url('./__buttons/button.css');
+@import url('./__messages/function__messages.css');
+
+.function {
+    grid-column: 3/4;
+    grid-row: 1/3;
+}
