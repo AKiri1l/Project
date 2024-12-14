@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Проект</title>
+</head>
+<body class="page">
+  <div class="page__content">
+    <header class="header">
+      <h1 class="header__title">Система защиты от атаки сканирования сетевых портов</h1>
+    </header>
+    <main class="main">
+      <section class="logs"></section>
+      <section class="function">
+        <div class="function__buttons">
+          <button class="button monitoring">Мониторинг</button>
+          <button class="button devices">Подключенные устройства</button>
+          <button class="button logbook">Скачать журнал</button>
+          <button class="button notification">Оповещения</button>
+        </div>
+        <div class="function__messages"></div>
+      </section>
+    </main>
+    <footer class="footer">
+      <p class="footer__title">Казань, КФУ</p>
+      <h2 class="footer__title">Арканников Кирилл, Янмурзина Альбина, Романов Даниил</h2>
+    </footer>
+    <div class="popup popup_type_devices popup_is-animated">
+      <div class="popup__content">
+        <button type="button" class="popup__close"></button>
+        <h3 class="popup__title">Подключенные устройства</h3>
+      </div>
+    </div>
+    <div class="popup popup_type_log popup_is-animated">
+      <div class="popup__content">
+        <button type="button" class="popup__close"></button>
+        <button class="popup__button ">Все события</button>
+        <button class="popup__button ">Попытки подключения к портам</button>
+        <button class="popup__button ">Действия системы</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

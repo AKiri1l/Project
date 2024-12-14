@@ -1,0 +1,15 @@
+@import url('../vendor/normalize.css');
+@import url('../vendor/fonts.css');
+@import url('../blocks/page/page.css');
+@import url('../blocks/footer/footer.css');
+@import url('../blocks/header/header.css');
+@import url('../blocks/main/main.css');
+@import url('../blocks/popup/popup.css');
+@import url('../blocks/popup/_is-animated/popup_is-animated.css');
+@import url('../blocks/popup/_is-opened/popup_is-opened.css');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}

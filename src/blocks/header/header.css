@@ -1,0 +1,11 @@
+.header {
+    height: 100px;
+    background-color: black;
+    opacity: 1;
+    text-align: center;
+}
+
+.header__title {
+    color: #fff;
+    opacity: 1;
+}
