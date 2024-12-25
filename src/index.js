@@ -5,7 +5,6 @@ let sysLog = new Array();
 const monitoring = document.querySelector('.monitoring');
 const deviceListButton = document.querySelector('.devices');
 const logButton = document.querySelector('.logbook');
-const deviceList = document.querySelector('.popup_type_devices');
 const logList = document.querySelector('.popup_type_log');
 const portButton = document.querySelector('.portlist');
 const logPopup = document.querySelector('.popup_type_log');
@@ -13,7 +12,7 @@ const logWindow = document.querySelector('.logs');
 const syslist = document.querySelector('.syslist');
 
 monitoring.addEventListener('click', () => {
-    logPopup.classList.remove('popup_is-opened');
+    sysLog.push("Вывод информации о мониторинге\n");
     logWindow.style.backgroundColor = 'white';
     fetch('http://localhost:8080/monitoring')
     .then(response => {
@@ -47,9 +46,6 @@ deviceListButton.addEventListener('click', () => {
         logWindow.innerHTML = data.replace(/\n/g, '<br>');
         return data;
     })
-    .then(data => {
-        extractData(data);
-    })
     .catch(error => {
         logWindow.textContent = error;
     });
@@ -67,22 +63,13 @@ logList.addEventListener('click', (evt) => {
     }
 })
 
-deviceList.addEventListener('click', (evt) => {
-    if(evt.target.classList.contains('popup__close')){
-        deviceList.classList.remove('popup_is-opened');
-        sysLog.push("Показ подключенных устройств\n");
-    }
-})
-
-portButton.addEventListener('click', () => {
-    sysLog.push = "Скачивание лога по попыткам сканирования\n";
-    if(evt.target.classList.contains('popup__close')){
-        deviceList.classList.remove('popup_is-opened');
-    }
-})
-
-syslist.addEventListener('click', () => {
+portButton.addEventListener('click', (evt) => {
     sysLog.push("Скачивание лога по попыткам сканирования\n");
+    logPopup.classList.remove('popup_is-opened');
+})
+
+syslist.addEventListener('click', (evt) => {
+    sysLog.push("Скачивание лога по действиям системы\n");
     fetch('http://localhost:8080/sysLog', {
         method: 'POST',
         headers: {
@@ -97,7 +84,5 @@ syslist.addEventListener('click', () => {
     .catch(error => {
         console.error('Error:', error);
     });
-    if(evt.target.classList.contains('popup__close')){
-        deviceList.classList.remove('popup_is-opened');
-    }
+    logPopup.classList.remove('popup_is-opened');
 })
