@@ -1,9 +1,8 @@
 import './pages/index.css';
 
-let loki = require('lokijs');
-const db = new loki('C:\\Users\\Admin\\dev\\Project\\src\\mydb.json');
-const networkLogs = db.addCollection('networkLogs');
+let sysLog = new Array();
 
+const monitoring = document.querySelector('.monitoring');
 const deviceListButton = document.querySelector('.devices');
 const logButton = document.querySelector('.logbook');
 const deviceList = document.querySelector('.popup_type_devices');
@@ -11,31 +10,32 @@ const logList = document.querySelector('.popup_type_log');
 const portButton = document.querySelector('.portlist');
 const logPopup = document.querySelector('.popup_type_log');
 const logWindow = document.querySelector('.logs');
+const syslist = document.querySelector('.syslist');
 
-deviceListButton.addEventListener('click', () => {
-    deviceList.classList.add('popup_is-opened');
-})
-
-logButton.addEventListener('click', () => {
-    logList.classList.add('popup_is-opened');
-})
-
-logList.addEventListener('click', (evt) => {
-    if(evt.target.classList.contains('popup__close')){
-        logList.classList.remove('popup_is-opened');
-    }
-})
-
-deviceList.addEventListener('click', (evt) => {
-    if(evt.target.classList.contains('popup__close')){
-        deviceList.classList.remove('popup_is-opened');
-    }
-})
-
-portButton.addEventListener('click', () => {
+monitoring.addEventListener('click', () => {
     logPopup.classList.remove('popup_is-opened');
     logWindow.style.backgroundColor = 'white';
-    fetch('http://localhost:8080/read')
+    fetch('http://localhost:8080/monitoring')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.text();
+    })
+    .then(data => {
+        // Отображаем содержимое файла в элементе <pre>
+        logWindow.innerHTML = data.replace(/\n/g, '<br>');
+        return data;
+    })
+    .catch(error => {
+        logWindow.textContent = error;
+    });
+})
+
+deviceListButton.addEventListener('click', () => {
+    logWindow.style.backgroundColor = 'white';
+    sysLog.push("Показ сетевых устройств\n");
+    fetch('http://localhost:8080/devices')
     .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -49,32 +49,55 @@ portButton.addEventListener('click', () => {
     })
     .then(data => {
         extractData(data);
-        db.saveDatabase();
     })
     .catch(error => {
         logWindow.textContent = error;
     });
+});
+
+logButton.addEventListener('click', () => {
+    logList.classList.add('popup_is-opened');
+    sysLog.push("Открытие меню для скачивания\n");
 })
 
-function extractData(text) {
-    const dates = [];
-    const ipv4Addresses = [];
-    const numbers = [];
+logList.addEventListener('click', (evt) => {
+    if(evt.target.classList.contains('popup__close')){
+        logList.classList.remove('popup_is-opened');
+        sysLog.push("Закрытие меню для скачивания\n");
+    }
+})
 
-    // Регулярные выражения
-    const dateRegex = /\d{4}-\d{2}-\d{2}\*\d{2}:\d{2}:\d{2}/g;
-    const ipv4Regex = /(\d{1,3}\.){3}\d{1,3}/g;
-    const numberRegex = /(\d+)$/gm;
+deviceList.addEventListener('click', (evt) => {
+    if(evt.target.classList.contains('popup__close')){
+        deviceList.classList.remove('popup_is-opened');
+        sysLog.push("Показ подключенных устройств\n");
+    }
+})
 
-    const res = text.split(" ");
-    res.forEach(element => {
-        if(dateRegex.test(element)){
-            dates.push(element.match(dateRegex))
-        } else if(ipv4Regex.test(element)) {
-            ipv4Addresses.push(element.match(ipv4Regex));
-        } else if(numberRegex.test(element)){
-            numbers.push(element);
-        }
+portButton.addEventListener('click', () => {
+    sysLog.push = "Скачивание лога по попыткам сканирования\n";
+    if(evt.target.classList.contains('popup__close')){
+        deviceList.classList.remove('popup_is-opened');
+    }
+})
+
+syslist.addEventListener('click', () => {
+    sysLog.push("Скачивание лога по попыткам сканирования\n");
+    fetch('http://localhost:8080/sysLog', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ sysLog })
     })
-    networkLogs.insert({date: dates, ip: ipv4Addresses, number: numbers});
-}
+    .then(response => response.text())
+    .then(data => {
+        console.log('Response from server:', data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+    if(evt.target.classList.contains('popup__close')){
+        deviceList.classList.remove('popup_is-opened');
+    }
+})
