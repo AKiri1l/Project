@@ -26,9 +26,7 @@ app.get('/monitoring', (req, res) => {
         console.error(err);
         return;
       }
-      console.log(data);
       extractData(data);
-      console.log(networkLogs.find())
     });
 })
 
@@ -141,6 +139,7 @@ function extractData(text) {
           numbers.push(element);
       }
   })
+  console.log(text);
   networkLogs.insert({date: dates, ip: ipv4Addresses, number: numbers});
   db.saveDatabase();
 }
