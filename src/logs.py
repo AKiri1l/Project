@@ -4,7 +4,7 @@ from collections import defaultdict
 import time
 
 # Настройка логирования
-logging.basicConfig(filename='port_scan_logs.txt', level=logging.INFO, format='%(asctime)s - %(message)s')
+logging.basicConfig(filename='port_scan_logs.txt', level=logging.INFO, format='%(message)s')
 
 # Порог для количества попыток сканирования
 SCAN_THRESHOLD = 10
@@ -39,15 +39,18 @@ def packet_callback(packet):
 
         last_packet_time[src_ip] = current_time  # Обновление времени последнего пакета
 
+        # Форматирование времени для логирования
+        formatted_time = time.strftime('%Y-%m-%d*%H:%M:%S', time.gmtime(current_time)) + f',{int((current_time % 1) * 1000):03d}'
+
         # Проверка на превышение порога
         if scan_attempts[src_ip] >= SCAN_THRESHOLD:
-            logging.info(f"Обнаружено сканирование с IP: {src_ip}, Порт: {dst_port} (порог достигнут)")
+            logging.info(f"{formatted_time} - Обнаружено сканирование с IP: {src_ip}, Порт: {dst_port} (порог достигнут)")
             # Проверка на наличие IP в файле перед записью
             if not is_ip_in_file(src_ip):
                 with open(threshold_ip_file, 'a') as f:
                     f.write(f"{src_ip}\n")
         else:
-            logging.info(f"Обнаружено сканирование с IP: {src_ip}, Порт: {dst_port}")
+            logging.info(f"{formatted_time} - Обнаружено сканирование с IP: {src_ip}, Порт: {dst_port}")
 
 
 # Запуск сниффера
