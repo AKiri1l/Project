@@ -66,6 +66,15 @@ logList.addEventListener('click', (evt) => {
 portButton.addEventListener('click', (evt) => {
     sysLog.push("Скачивание лога по попыткам сканирования\n");
     logPopup.classList.remove('popup_is-opened');
+    const fileUrl = 'http://localhost:8080/downloadLog'; // URL для скачивания файла
+
+    const link = document.createElement('a');
+    link.href = fileUrl;
+    link.download = ''; // Имя файла будет установлено сервером
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 })
 
 syslist.addEventListener('click', (evt) => {
@@ -81,8 +90,20 @@ syslist.addEventListener('click', (evt) => {
     .then(data => {
         console.log('Response from server:', data);
     })
+    .then(() => {
+        const fileUrl = 'http://localhost:8080/sysLog'; // URL для скачивания файла
+
+    const link = document.createElement('a');
+    link.href = fileUrl;
+    link.download = ''; // Имя файла будет установлено сервером
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    })
     .catch(error => {
         console.error('Error:', error);
     });
     logPopup.classList.remove('popup_is-opened');
 })
+
