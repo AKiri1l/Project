@@ -46,6 +46,51 @@ app.use("/sysLog", function(request, response) {
   response.send(responseText); // отправляем ответ клиенту
 });
 
+app.get('/downloadLog', (req, res) => {
+  const filePath = networkPath; // Замените на реальный путь к файлу
+
+  // Проверяем, существует ли файл
+  if (fs.existsSync(filePath)) {
+      // Устанавливаем заголовки для скачивания файла
+      res.setHeader('Content-Type', 'application/octet-stream');
+      res.setHeader('Content-Disposition', filename='IPLog.txt');
+
+      // Создаем поток для чтения файла и отправляем его клиенту
+      const fileStream = fs.createReadStream(filePath);
+      fileStream.pipe(res);
+  }else {
+    // Если файл не найден, возвращаем ошибку 404
+    res.status(404).send('Файл не найден');
+}
+});
+
+
+app.use("/sysLog", function(request, response) {
+  if(request.body.sysLog){
+    const logs = request.body.sysLog; // считываем массив из тела запроса
+  let responseText = ''; // инициализируем переменную для текста
+  logs.forEach(element => {
+      responseText += element + '\n'; // добавляем каждый элемент и новую строку
+  });
+  storeFile(responseText, 'sysLog');
+  }
+  const filePath = sys;
+  // Проверяем, существует ли файл
+  if (fs.existsSync(filePath)) {
+      // Устанавливаем заголовки для скачивания файла
+      response.setHeader('Content-Type', 'application/octet-stream');
+      response.setHeader('Content-Disposition', filename='SysLog.txt');
+
+      // Создаем поток для чтения файла и отправляем его клиенту
+      const fileStream = fs.createReadStream(filePath);
+      fileStream.pipe(response);
+  }else {
+    // Если файл не найден, возвращаем ошибку 404
+    response.status(404).send('Файл не найден');
+  }
+});
+
+
 function runPythonLogs() {
   return new Promise((resolve, reject) => {
     const pythonProcess = spawn('python', ['logs.py']);
